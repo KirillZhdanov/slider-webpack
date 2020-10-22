@@ -2,7 +2,7 @@
 
 ## Preview
 
-![Preview image](https://github.com/KirillZhdanov/Slider/blob/master/preview.png?raw=true)
+![Preview image](https://github.com/KirillZhdanov/slider-webpack/blob/master/preview.png?raw=true)
 
 ## Features
 
