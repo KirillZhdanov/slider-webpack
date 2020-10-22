@@ -14,8 +14,7 @@
 
 ## How to use
 
-Just import <u>Container</u> component from '.src/components' and wrap any content you need <u>into Container</u>.
-Also you can import <u>Slider</u> component and pass data directly into slides props.
+Just import <u>Container</u> component from '.src/components' and wrap any content you need <u>into Slider</u>.
 
 ## How to run
 
@@ -26,7 +25,9 @@ npm i
 ```
 
 then run
-
+```sh
+cd slider
+```
 ```sh
 npm start.
 ```
