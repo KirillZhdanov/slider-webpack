@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import SliderIndicators from "./SliderIndicators";
-/*
-import "@fortawesome/fontawesome-free";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; //uncomment there and on buttons if u want to use font-awesome icons
-*/
+
 export default function SliderContent({ slides, settings, slidesLength }) {
   const isDuplicateNeeded = useRef(settings.infiniteLoop || false);
   const isIndicatorsNeeded = settings?.indicators || false;
@@ -110,15 +107,9 @@ export default function SliderContent({ slides, settings, slidesLength }) {
         }}
       >
         <button className="slider-arrow-left" onClick={previousSlide}>
-          {
-            //<FaChevronLeft />
-          }
           &lt;
         </button>
         <button className="slider-arrow-right" onClick={nextSlide}>
-          {
-            //<FaChevronRight />
-          }
           &gt;
         </button>
       </div>
