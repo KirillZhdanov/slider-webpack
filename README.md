@@ -21,12 +21,12 @@ Just import <u>Container</u> component from '.src/components' and wrap any conte
 To run slider-app you should run
 
 ```sh
-npm i
+cd slider
 ```
 
 then run
 ```sh
-cd slider
+npm i
 ```
 ```sh
 npm start.
