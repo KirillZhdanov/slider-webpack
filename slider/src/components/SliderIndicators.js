@@ -8,25 +8,18 @@ export default function SliderIndicators({
   slidesPerView,
 }) {
   const isCarouselNumFix = slides.length !== slidesLength ? 1 : 0;
+  const slidesClassNames = slides.map((el, idx) =>
+    idx + slidesPerView <= slidesLength
+      ? idx + isCarouselNumFix === Math.abs(translateSlideValue / 100)
+        ? "indicators active"
+        : "indicators"
+      : null
+  );
   return (
     <>
-      {slides.map((el, idx) =>
-        idx + slidesPerView <= slidesLength ? (
-          idx + isCarouselNumFix === Math.abs(translateSlideValue / 100) ? (
-            <span
-              key={idx}
-              className="indicators active"
-              onClick={indicatorClickHandler}
-            ></span>
-          ) : (
-            <span
-              key={idx}
-              className="indicators"
-              onClick={indicatorClickHandler}
-            ></span>
-          )
-        ) : null
-      )}
+      {slidesClassNames.map((el, idx) => (
+        <span key={idx} className={el} onClick={indicatorClickHandler}></span>
+      ))}
     </>
   );
 }
