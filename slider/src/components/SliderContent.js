@@ -105,7 +105,7 @@ export default function SliderContent({ slides, settings, slidesLength }) {
   const mouseUp = (e) => {
     isMouseDown.current = false;
     touchPositionMove.current = e.pageX;
-    if (touchPositionStart.current - e.pageX === 0) return false;
+    if (touchPositionStart.current - e.pageX === 0) return;
     if (touchPositionStart.current - e.pageX > 0) {
       setTimeout(() => (isTransitionEnd.current = 0), 100);
       if (
@@ -113,7 +113,9 @@ export default function SliderContent({ slides, settings, slidesLength }) {
         Math.abs(translateSlideValue) !== 0
       ) {
         setNewTransitionType("all 1s ease-in-out");
-        setNewTranslateSlideValue(Math.round(translateSlideValue / 100) * 100);
+        setNewTranslateSlideValue(
+          Number(Math.round(translateSlideValue / 100).toFixed(0)) * 100
+        );
       }
     }
   };
