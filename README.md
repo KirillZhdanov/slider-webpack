@@ -1,4 +1,4 @@
-[Deploy-link](https://kirillzhdanov-simple-slider.netlify.app)
+[Deploy-link](https://gifted-fermat-c9fc3b.netlify.app)
 
 ## Preview
 
