@@ -8,8 +8,9 @@ export default function SliderContent({ slides, settings, slidesLength }) {
   const index = useRef(0);
   const prevMove = useRef(0);
   const isIndicatorsNeeded = settings?.indicators || false;
+  const isCarouselNumFix = isDuplicateNeeded.current ? -100 : 0;
   const [translateSlideValue, setNewTranslateSlideValue] = useState(
-    isDuplicateNeeded.current ? -100 : 0
+    isCarouselNumFix
   );
   const slidesPerView = settings?.slidesPerView || 1;
   const [render, setRender] = useState(false);
@@ -81,11 +82,7 @@ export default function SliderContent({ slides, settings, slidesLength }) {
   const touchEnd = (e) => {
     touchPositionEnd.current = e.changedTouches[0].pageX;
     prevMove.current = 0;
-    console.log(
-      Math.round(translateSlideValue / 100) * 100,
-      touchPositionStart.current,
-      touchPositionEnd.current
-    );
+
     if (
       Math.abs(touchPositionStart.current - touchPositionEnd.current) < 100 &&
       Math.abs(touchPositionStart.current - touchPositionEnd.current) > 0
@@ -111,24 +108,63 @@ export default function SliderContent({ slides, settings, slidesLength }) {
     if (touchPositionStart.current - e.pageX === 0) return false;
     if (touchPositionStart.current - e.pageX > 0) {
       setTimeout(() => (isTransitionEnd.current = 0), 100);
-      if (Math.abs(translateSlideValue) <= (slides.length - 2) * 100) {
+      if (
+        Math.abs(translateSlideValue) <= (slides.length - 2) * 100 ||
+        Math.abs(translateSlideValue) !== 0
+      ) {
         setNewTransitionType("all 1s ease-in-out");
-        setNewTranslateSlideValue(translateSlideValue - 100);
+        setNewTranslateSlideValue(Math.round(translateSlideValue / 100) * 100);
       }
-    } else {
-      if (Math.abs(translateSlideValue) !== 0) {
-        setNewTransitionType("all 1s ease-in-out");
-        setNewTranslateSlideValue(translateSlideValue + 100);
-      }
-      setTimeout(() => (isTransitionEnd.current = 0), 100);
     }
   };
   const mouseMove = (e) => {
     if (isMouseDown.current) {
-      console.log("MOVE: ", e.pageX, touchPositionStart.current, e);
+      if (
+        translateSlideValue >= 0 ||
+        Math.abs(translateSlideValue) >= (slides.length - 1) * 100
+      )
+        return;
+      isTransitionEnd.current = 1;
+      if (touchPositionStart.current - e.pageX > 0) {
+        if (
+          Math.abs(translateSlideValue) <= (slides.length - 1) * 100 &&
+          index.current + 1 >= Math.floor(Math.abs(translateSlideValue) / 100)
+        ) {
+          setNewTransitionType("all 1s ease-in-out");
+
+          setNewTranslateSlideValue(
+            Math.floor(
+              translateSlideValue +
+                Math.abs(prevMove.current) -
+                ((touchPositionStart.current - e.pageX) /
+                  e.target.clientWidth) *
+                  100
+            )
+          );
+        }
+      } else {
+        if (index.current <= Math.abs(translateSlideValue) / 100 + 1) {
+          setNewTransitionType("all 1s ease-in-out");
+          setNewTranslateSlideValue(
+            Math.ceil(
+              translateSlideValue -
+                Math.abs(prevMove.current) +
+                Math.abs(
+                  (touchPositionStart.current - e.pageX) / e.target.clientWidth
+                ) *
+                  100
+            )
+          );
+        }
+      }
+      isTransitionEnd.current = 0;
+      touchPositionMove.current = e.pageX;
+      prevMove.current =
+        ((touchPositionStart.current - e.pageX) / e.target.clientWidth) * 100;
     }
   };
   const mouseDown = (e) => {
+    index.current = Math.abs(translateSlideValue / 100);
     isMouseDown.current = true;
     touchPositionStart.current = e.pageX;
   };
@@ -213,9 +249,10 @@ export default function SliderContent({ slides, settings, slidesLength }) {
         onTouchMove={touchMove}
         onTouchStart={touchStart}
         onTouchEnd={touchEnd}
-        onMouseDown={mouseDown}
         onMouseMove={mouseMove}
+        onMouseDown={mouseDown}
         onMouseUp={mouseUp}
+        onMouseLeave={() => (isMouseDown.current = false)}
         onDragStart={(e) => e.preventDefault()}
       >
         {slides.map((el, idx) => (
